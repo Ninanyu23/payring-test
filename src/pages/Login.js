@@ -73,7 +73,7 @@ const Login = () => {
         {error && <p className="error">{error}</p>}
 
         <div className="button-container">
-          <button type="submit">로그인</button>
+          <div className='login-btn'><button type="submit">로그인</button></div>
           <PageNavigationButton label="회원가입" to="/signup" />
         </div>
       </form>

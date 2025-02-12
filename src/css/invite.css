@@ -1,0 +1,80 @@
+.invite-container {
+    width: 450px;
+}
+
+h2 {
+    font-size: 32px;
+    color: #003b49;
+}
+
+.invite-card {
+    display: flex;
+    /* 내부 요소를 가로 정렬 */
+    justify-content: space-between;
+    align-items: center;
+    /* 세로 중앙 정렬 */
+    border: 3px solid #d4e9d6;
+    border-radius: 30px;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: 2px 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.invite-info {
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    /* 글자를 세로로 정렬 */
+}
+
+.room-name {
+    font-size: 24px;
+    font-weight: 800;
+    color: #003b49;
+    margin-bottom: 10px;
+}
+
+.member-count {
+    font-size: 16px;
+    font-weight: 550;
+    color: black;
+    margin-top: 0;
+}
+
+.invite-buttons {
+    width: 150px;
+    flex-direction: column;
+    gap: 5px;
+    margin-right: -20px;
+}
+
+
+.accept-btn {
+    background: #d4e9d6;
+    color: #1e4620;
+    border: solid #d4e9d6;
+    padding: 5px 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.accept-btn:hover {
+    border: solid #003b49;
+    background-color: #003b49;
+}
+
+.reject-btn {
+    background: #003b49;
+    color: white;
+    border: solid #003b49;
+    padding: 5px 10px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.reject-btn:hover {
+    background-color: white;
+    color: #003b49;
+}

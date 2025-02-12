@@ -9,9 +9,22 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [bankAccounts, setBankAccounts] = useState([{ bankName: '', accountNumber: '' }]);
   const [kakaoPayLink, setKakaoPayLink] = useState('');
+  const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [error, setError] = useState(null);
   const [sentVerificationCode, setSentVerificationCode] = useState(null);
   const [isVerificationCodeValid, setIsVerificationCodeValid] = useState(false);
+
+  // 프로필 이미지 변경 처리
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result); // 이미지 URL로 설정
+      };
+      reader.readAsDataURL(file); // 파일을 읽어 미리보기
+    }
+  };
 
   // 인증번호 발송 버튼 클릭 시 이메일 형식 검증
   const handleSendVerificationCode = async () => {
@@ -26,7 +39,7 @@ const Signup = () => {
     }
     setError(null);
     alert('인증번호가 이메일로 발송되었습니다.');
-    // 실제 인증번호 전송 로직 추가 (예: API 호출)
+    // 실제 인증번호 전송 로직(api) 호출
   };
 
   const handleVerifyCode = () => {
@@ -78,7 +91,7 @@ const Signup = () => {
       return;
     }
 
-    console.log('회원가입 데이터:', { name, email, password, bankAccounts, kakaoPayLink });
+    console.log('회원가입 데이터:', { name, email, password, bankAccounts, kakaoPayLink, profileImage });
     window.location.href = '/login';
   };
 
@@ -199,6 +212,18 @@ const Signup = () => {
             placeholder="카카오페이 송금 링크(URL) 입력"
             required
           />
+        </div>
+
+        {/* 프로필 사진 업로드 */}
+        <label htmlFor="profileImage">프로필 사진</label>
+        <div className="input-group">
+          <input
+            type="file"
+            id="profileImage"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+          />
+          {profileImage && <img src={profileImage} alt="Profile" className="profile-image-preview" />}
         </div>
 
         {/* 오류 메시지 */}

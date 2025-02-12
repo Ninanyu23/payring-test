@@ -37,8 +37,11 @@ input {
   display: flex;
   flex-direction: column; 
   align-items: center; 
-  margin-top: 50px;
   gap: 10px;
+}
+
+.login-btn{
+  width: 100%;
 }
 
 button {

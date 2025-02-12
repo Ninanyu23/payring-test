@@ -1,0 +1,96 @@
+/*전체 컨테이너*/
+/*전체 컨테이너*/
+.my-page-container {
+  background-color: #052f33;
+  height: 70vh;
+  width: 80%; /* 가로 길이를 화면의 80%로 설정 */
+  max-width: 1000px; /* 최대 가로 길이를 설정 */
+  overflow: auto;
+  border: none;
+  border-radius: 15px;
+  margin-top: 100px;
+  padding: 30px;
+}
+
+
+/*수정 버튼 스타일*/
+.material-symbols-outlined {
+  color: #b0d4a8;
+  margin-bottom: 30px;
+  justify-content: flex-end;
+}
+
+.material-symbols-outlined:hover {
+  cursor: pointer;
+}
+
+
+/* 헤더 영역: 타이틀과 수정 버튼 */
+.header {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+/* 정보 영역을 왼쪽 정렬 */
+.info {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 왼쪽 여백 추가 */
+}
+
+/* 각 항목들도 왼쪽 정렬 */
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  border: none;
+  border-radius: 30px;
+  background-color: white;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  padding: 3px;
+}
+
+
+.info-label {
+  font-weight: bold;
+  color: white;
+}
+
+.info-value {
+  margin-left: 8px;
+  color: #08313F;
+  font-weight: 500;
+}
+
+/* 방 초대 내역 보러 가기 버튼 스타일 */
+/* 기존 .invite-btn 스타일 수정 */
+.invite-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* 초록색 버튼 스타일 적용 */
+.invite-btn button {
+  width: 100%;
+  /* 전체 너비 사용 */
+  box-shadow: black;
+  background-color: #D5EDD2;
+  color: black;
+  border: solid 2px #D5EDD2;
+  border-radius: 30px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.invite-btn button:hover {
+  background-color: white;
+  color: #08313F;
+  border: solid 2px #08313F;
+}
