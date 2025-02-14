@@ -1,198 +1,250 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // 추가
 import '../css/signup.css';
 
 const Signup = () => {
-  const [name, setName] = useState('');
+  const [userName, setUserName] = useState(''); // 이름 필드명 변경
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [bankAccounts, setBankAccounts] = useState([{ bankName: '', accountNumber: '' }]);
-  const [kakaoPayLink, setKakaoPayLink] = useState('');
-  const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
+  const [accounts, setAccounts] = useState([{ bankName: '', accountNo: '', receiver: '' }]); // bankName, accountNo, receiver 필드 맞추기
+  const [payUrl, setPayUrl] = useState(''); // kakaoPayLink에서 payUrl로 변경
+  const [profileImage, setProfileImage] = useState(null);
   const [error, setError] = useState(null);
-  const [sentVerificationCode, setSentVerificationCode] = useState(null);
-  const [isVerificationCodeValid, setIsVerificationCodeValid] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  // 프로필 이미지 변경 처리
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result); // 이미지 URL로 설정
-      };
-      reader.readAsDataURL(file); // 파일을 읽어 미리보기
-    }
+    setProfileImage(file);
   };
 
-  // 인증번호 발송 버튼 클릭 시 이메일 형식 검증
   const handleSendVerificationCode = async () => {
+    if (isVerifying) return;
+    setIsVerifying(true);
     if (!email) {
       setError('이메일을 입력해주세요.');
+      setIsVerifying(false);
       return;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('제대로 된 이메일 주소를 입력 해 주세요');
-      return;
+
+    try {
+      const response = await fetch(`https://storyteller-backend.site/api/auth/email/verify/send?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+      if (data.code === 'SUCCESS_SEND_EMAIL') {
+        alert('인증번호가 이메일로 발송되었습니다.');
+        setIsVerified(false);
+      } else {
+        setError(data.message || '이메일 인증 요청 실패');
+      }
+    } catch (err) {
+      setError('서버 연결 실패');
     }
-    setError(null);
-    alert('인증번호가 이메일로 발송되었습니다.');
-    // 실제 인증번호 전송 로직(api) 호출
+    setIsVerifying(false);
   };
 
-  const handleVerifyCode = () => {
-    if (verificationCode === sentVerificationCode) {
-      setIsVerificationCodeValid(true);
-      setError(null);
-      alert('인증번호가 확인되었습니다.');
-    } else {
-      setIsVerificationCodeValid(false);
-      setError('인증번호가 일치하지 않습니다.');
+  const handleVerifyCode = async () => {
+    if (isVerifying) return;
+    setIsVerifying(true);
+    try {
+      const response = await fetch('https://storyteller-backend.site/api/auth/email/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, verificationCode }),
+      });
+
+      const data = await response.json();
+      if (data.code === 'SUCCESS_VERIFY_EMAIL') {
+        setIsVerified(true);
+        alert('이메일 인증 성공');
+      } else {
+        setError('인증번호가 일치하지 않습니다.');
+      }
+    } catch (err) {
+      setError('서버 연결 실패');
     }
+    setIsVerifying(false);
   };
 
-  const handleAddBankAccount = () => {
-    setBankAccounts([...bankAccounts, { bankName: '', accountNumber: '' }]);
-  };
-
-  const handleBankChange = (index, field, value) => {
-    const updatedAccounts = [...bankAccounts];
-    updatedAccounts[index][field] = value;
-    setBankAccounts(updatedAccounts);
-  };
-
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    // 이메일 형식 검증
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('제대로 된 이메일 주소를 입력 해 주세요');
+  
+    // 이메일 인증 확인
+    if (!isVerified) {
+      setError('이메일 인증을 완료해주세요.');
       return;
     }
-
-    // 비밀번호 길이 검증 (8~16자리)
-    if (password.length < 8 || password.length > 16) {
-      setError('비밀번호는 8~16자리여야 합니다.');
-      return;
-    }
-
-    // 비밀번호와 비밀번호 확인 일치 여부 검증
+  
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
-
-    // 인증번호 검증
-    if (!isVerificationCodeValid) {
-      setError('인증번호를 확인해주세요.');
-      return;
+  
+    const payload = {
+      userName,
+      email,
+      password,
+      profileImage,
+      payUrl,
+      accounts,
+    };
+  
+    try {
+      const response = await fetch('https://storyteller-backend.site/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      // 403 Forbidden 응답 처리
+      if (response.status === 403) {
+        setError(data.message || '접근 권한이 없습니다.');
+        return;
+      }
+  
+      if (data.code === 'SUCCESS_SIGNUP') {
+        alert('회원가입 성공!');
+        window.location.href = '/';
+      } else {
+        setError(data.message || '회원가입 실패');
+      }
+    } catch (err) {
+      setError('서버 연결 실패');
     }
-
-    console.log('회원가입 데이터:', { name, email, password, bankAccounts, kakaoPayLink, profileImage });
-    window.location.href = '/login';
   };
+
+  const handleBankChange = (index, field, value) => {
+    const updatedAccounts = [...accounts];
+    updatedAccounts[index][field] = value;
+    setAccounts(updatedAccounts);
+  };
+
+  const handleAddBankAccount = () => {
+    setAccounts([...accounts, { bankName: '', accountNo: '', receiver: '' }]); // receiver 필드 추가
+  };
+
+  const profileImageUrl = profileImage ? URL.createObjectURL(profileImage) : null;
+
+  useEffect(() => {
+    return () => {
+      if (profileImage) {
+        URL.revokeObjectURL(profileImageUrl);
+      }
+    };
+  }, [profileImage, profileImageUrl]);
 
   return (
     <div className="signup-container">
       <h2>회원가입</h2>
       <form onSubmit={handleSignup}>
-        {/* 이름 입력 */}
-        <label htmlFor="name">이름</label>
+        <label htmlFor="userName">이름</label>
         <div className="input-group">
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="userName"
+            name="userName"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             placeholder="이름을 입력하세요"
             required
+            autoComplete="name"
           />
         </div>
 
-        {/* 이메일 입력 및 인증번호 발송 */}
         <label htmlFor="email">이메일</label>
         <div className="input-group">
           <input
             type="email"
             id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="이메일을 입력하세요"
             required
+            disabled={isVerified}
+            autoComplete="email"
           />
           <button type="button" className="send-code-btn" onClick={handleSendVerificationCode}>
             인증번호
           </button>
         </div>
 
-        {/* 인증번호 입력 및 확인 */}
         <div className="input-group">
           <input
             type="text"
             id="verificationCode"
+            name="verificationCode"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
             placeholder="인증번호를 입력하세요"
             required
+            autoComplete="off"
           />
           <button type="button" className="verify-code-btn" onClick={handleVerifyCode}>
             인증확인
           </button>
         </div>
 
-        {/* 비밀번호 입력 */}
         <label htmlFor="password">비밀번호</label>
         <div className="input-group">
           <input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호 입력 (8~16자리)"
             minLength={8}
             maxLength={16}
             required
+            autoComplete="new-password"
           />
         </div>
 
-        {/* 비밀번호 확인 */}
         <label htmlFor="confirmPassword">비밀번호 확인</label>
         <div className="input-group">
           <input
             type="password"
             id="confirmPassword"
+            name="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="비밀번호 재입력"
             minLength={8}
             maxLength={16}
             required
+            autoComplete="off"
           />
         </div>
 
-        {/* 은행명 및 계좌번호 입력 그룹과 계좌 추가 버튼을 하나의 컨테이너에 포함 */}
-        <label htmlFor="bank">송금 받을 은행명 & 계좌번호</label>
+        <label>송금 받을 은행명 & 계좌번호</label>
         <div className="bank-accounts-container">
-          {bankAccounts.map((account, index) => (
+          {accounts.map((account, index) => (
             <div key={index} className="input-group bank-input-group">
               <input
                 type="text"
+                className='bank-name-input'
+                name={`bankName-${index}`}
                 value={account.bankName}
                 onChange={(e) => handleBankChange(index, 'bankName', e.target.value)}
-                placeholder="은행명 입력"
-                className="bank-name-input"
-                required
+                placeholder="은행명"
+                autoComplete="off"
               />
               <input
                 type="text"
-                value={account.accountNumber}
-                onChange={(e) => handleBankChange(index, 'accountNumber', e.target.value)}
-                placeholder="계좌번호 입력"
-                className="account-number-input"
-                required
+                className='account-number-input'
+                name={`accountNo-${index}`}
+                value={account.accountNo}
+                onChange={(e) => handleBankChange(index, 'accountNo', e.target.value)}
+                placeholder="계좌번호"
+                autoComplete="off"
               />
             </div>
           ))}
@@ -201,38 +253,40 @@ const Signup = () => {
           </button>
         </div>
 
-        {/* 카카오페이 송금 링크 */}
-        <label htmlFor="kakaoPayLink">카카오페이 송금 링크(URL)</label>
-        <div className="input-group">
-          <input
-            type="url"
-            id="kakaoPayLink"
-            value={kakaoPayLink}
-            onChange={(e) => setKakaoPayLink(e.target.value)}
-            placeholder="카카오페이 송금 링크(URL) 입력"
-            required
-          />
-        </div>
+        <label htmlFor="payUrl">카카오페이 송금 링크(URL)</label>
+        <input
+          type="url"
+          id="payUrl"
+          name="payUrl"
+          value={payUrl}
+          onChange={(e) => setPayUrl(e.target.value)}
+          placeholder="카카오페이 링크"
+          autoComplete="off"
+        />
 
-        {/* 프로필 사진 업로드 */}
-        <label htmlFor="profileImage">프로필 사진</label>
-        <div className="input-group">
+        <label>프로필 사진</label>
+        <div className="file-upload">
+          <label htmlFor="profileImage" className="file-upload-label">
+            <span className="material-symbols-outlined">image</span>
+          </label>
           <input
             type="file"
             id="profileImage"
             accept="image/*"
+            name="profileImage"
             onChange={handleProfileImageChange}
           />
-          {profileImage && <img src={profileImage} alt="Profile" className="profile-image-preview" />}
         </div>
+        {profileImage && (
+          <img
+            src={URL.createObjectURL(profileImage)}
+            alt="Profile"
+            className="profile-image-preview"
+          />
+        )}
 
-        {/* 오류 메시지 */}
         {error && <p className="error">{error}</p>}
-
-        {/* 회원가입 버튼 */}
-        <div className="button-container">
-          <button type="submit">회원가입</button>
-        </div>
+        <button type="submit">회원가입</button>
       </form>
     </div>
   );

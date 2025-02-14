@@ -1,5 +1,5 @@
-/* 전체 컨테이너 */
-.my-page-container {
+/* EditPage 스타일 */
+.edit-page-container {
   width: 355px;
   padding: 30px;
   margin: 0 auto;
@@ -14,55 +14,16 @@
   background-color: #052f33;
   border: none;
   border-radius: 15px;
-  box-sizing: border-box; /* padding을 width에 포함시켜 레이아웃 안정화 */
+  box-sizing: border-box;
 }
 
-/* 수정 버튼 스타일 */
-.edit-icon {
-  width: 45px;
-  color: #b0d4a8;
-  position: absolute; /* 절대 위치 지정 */
-  top: 30px; /* 원하는 위치에서 위쪽으로 30px */
-  right: 30px; /* 오른쪽 끝에서 30px 간격 */
-}
-
-.edit-icon:hover {
-  cursor: pointer;
-}
-
-/* 정보 영역을 왼쪽 정렬 */
-.info {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  padding: 20px;
-}
-
-/* 각 항목들도 왼쪽 정렬 */
-.info-item {
+.profile-info {
+  color: black;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  border: none;
-  border-radius: 30px;
-  background-color: white;
-  margin-top: 5px;
   margin-bottom: 20px;
-  padding: 5px;
-}
-
-.info-label {
-  font-weight: bold;
-  color: white;
-}
-
-.info-value {
-  font-size: large;
-  color: #08313F;
-  font-weight: 500;
 }
 
 /* 프로필 이미지 스타일 */
@@ -99,16 +60,72 @@
   flex-direction: row; /* 세로 정렬 방지 */
 }
 
-/* 유저 이름 스타일 */
-.user-name {
-  font-size: 24px; /* 원하는 크기 */
-  font-weight: bold;
-  color: white;
-  margin-top: 20px;
+.info {
+  color: black;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px;
 }
 
-/* 초록색 버튼 스타일 적용 */
-.invite-btn button {
+.file-input {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.user-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-name label {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.editable-name {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #D5EDD2;
+  border-radius: 10px;
+  width: 250px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.edit-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.edit-info label {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.edit-info input {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+}
+
+.save-btn-wrapper button {
   margin-top: 10%;
   margin-bottom: 10%;
   width: 100%;
@@ -121,7 +138,7 @@
   cursor: pointer;
 }
 
-.invite-btn button:hover {
+.save-btn-wrapper button:hover {
   background-color: white;
   color: #08313F;
   border: solid 2px #08313F;

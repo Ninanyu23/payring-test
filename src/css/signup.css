@@ -1,15 +1,29 @@
-/* 기본 컨테이너 */
 .signup-container {
-  width: 400px;
-  padding: 40px;
+  width: 355px;
+  padding: 30px;
   margin: 0 auto;
-  margin-top: 200px;
-  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+}
+
+/* 카카오페이 링크 입력 필드 */
+input[type="url"] {
+  width: 355px;  /* 다른 입력 필드들과 동일한 너비 */
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #868686;
+  background-color: #F9F9F9;
 }
 
 h2 {
-  margin-bottom: 30px;
-  text-align: left;
+  text-align: left; /* 왼쪽 정렬 유지 */
+  font-size: 24px; /* 글씨 크기 명확하게 설정 */
+  font-weight: bold; /* 두껍게 설정 */
+  color: #08313F; /* 가독성 좋은 색상 지정 */
 }
 
 /* 입력 필드 스타일 */
@@ -19,7 +33,6 @@ input {
   border: 1px solid #868686;
   background-color: #F9F9F9;
   width: 100%; 
-  box-sizing: border-box;
 }
 
 /* 입력 필드와 버튼을 같은 줄에 배치 */
@@ -94,6 +107,8 @@ input {
   color: black;
 }
 
+
+
 /* 계좌 추가 버튼 (컨테이너 내에 배치하므로 별도의 margin은 제거) */
 .add-account-btn {
   background-color: #F9F9F9;
@@ -118,19 +133,40 @@ input {
   margin-top: 10px;
 }
 
-/* 회원가입 버튼 */
-.button-container {
-  margin-top: 20px;
+/* 프로필 관련 스타일 */
+.file-upload {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-image-preview {
+  display: block;
+  width: 200px; /* 이미지 크기 조정 */
+  height: 200px;
+  object-fit: cover; /* 이미지 비율 유지하면서 영역에 맞게 자르기 */
+  border-radius: 50%;
+  border: 2px solid #ccc; /* 이미지 테두리 스타일 */
+  margin: 10px auto; 
+  margin-bottom: 50px;
+}
+
+input[type="file"] {
+  display: none; 
 }
 
 /* 기본 버튼 스타일 (나머지 버튼에 적용) */
 button {
+  width: 50%;
   padding: 10px;
   background-color: #08313F;
   color: white;
   border: none;
   border-radius: 35px;
   cursor: pointer;
+  display: block; 
+  margin: 10px auto;  
 }
 
 button:hover {

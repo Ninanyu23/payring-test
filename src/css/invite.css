@@ -1,18 +1,23 @@
 .invite-container {
-    width: 450px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 h2 {
+    margin-top: 60px;
     font-size: 32px;
-    color: #003b49;
+    color: #08313F;
+    text-align: left; /* 왼쪽 정렬 */
+    display: block; /* 블록 요소로 설정하여 정렬이 정상적으로 적용되게 함 */
 }
+
 
 .invite-card {
     display: flex;
-    /* 내부 요소를 가로 정렬 */
     justify-content: space-between;
     align-items: center;
-    /* 세로 중앙 정렬 */
     border: 3px solid #d4e9d6;
     border-radius: 30px;
     padding: 10px;
@@ -25,13 +30,12 @@ h2 {
     margin-left: 40px;
     display: flex;
     flex-direction: column;
-    /* 글자를 세로로 정렬 */
 }
 
 .room-name {
     font-size: 24px;
     font-weight: 800;
-    color: #003b49;
+    color: #08313F;
     margin-bottom: 10px;
 }
 
@@ -49,10 +53,9 @@ h2 {
     margin-right: -20px;
 }
 
-
 .accept-btn {
     background: #d4e9d6;
-    color: #1e4620;
+    color: #08313F;
     border: solid #d4e9d6;
     padding: 5px 10px;
     border-radius: 25px;
@@ -61,14 +64,14 @@ h2 {
 }
 
 .accept-btn:hover {
-    border: solid #003b49;
-    background-color: #003b49;
+    border: solid #08313F;
+    background-color: #08313F;
 }
 
 .reject-btn {
-    background: #003b49;
+    background: #08313F;
     color: white;
-    border: solid #003b49;
+    border: solid #08313F;
     padding: 5px 10px;
     border-radius: 25px;
     cursor: pointer;
@@ -76,5 +79,10 @@ h2 {
 
 .reject-btn:hover {
     background-color: white;
-    color: #003b49;
+    color: #08313F;
+}
+
+.no-invites {
+    color: #08313F;
+    text-align: center;
 }

@@ -1,49 +1,57 @@
 body, html {
-  height: 100%;
-  margin: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
 }
+
+/* 로그인/회원가입 컨테이너 */
+.login-container {
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: center; /* 세로 가운데 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  height: 100vh; /* 화면 전체 높이 사용 */
+  width: 100%; /* 전체 가로 너비를 70%로 설정 (기존보다 넓게) */
+  max-width: 1400px; /* 최대 너비를 1400px로 설정 */
+  text-align: center;
+  margin: 0 auto; /* 중앙 정렬 */
+}
+
 
 .guest {
-  margin-bottom: 50px;
+  padding: 10px;
 }
 
-.login-container {
-  width: 320px;
-  padding: 40px;
-  border-radius: 8px;
-  text-align: center;
-}
-
+/* 라벨 스타일 */
 label {
   font-weight: 900;
   display: block;
   text-align: left;
-  margin-top:15px;
+  margin-top: 15px;
 }
 
+/* 입력 필드 스타일 */
 input {
-  width: 100%;
-  padding: 10px;
   margin-top: 5px;
   margin-bottom: 15px;
   border-radius: 30px;
   border: 1px solid black;
 }
 
+/* 버튼 컨테이너 */
 .button-container {
   display: flex;
   flex-direction: column; 
   align-items: center; 
-  gap: 10px;
 }
 
-.login-btn{
+/* 로그인 버튼 스타일 */
+.login-btn {
   width: 100%;
 }
 
+/* 기본 버튼 스타일 */
 button {
   padding: 10px;
   background-color: #D5EDD2;
@@ -55,26 +63,37 @@ button {
   font-weight: bold;
 }
 
+/* 버튼 호버 스타일 */
 button:hover {
   background-color: #08313F;
   color: white;
 }
 
+/* 페이지 네비게이션 버튼 스타일 */
 .PageNavigationButton {
   background-color: white;
   color: #08313F;
   border: 2px solid #08313F;
 }
 
+/* 페이지 네비게이션 버튼 호버 스타일 */
 .PageNavigationButton:hover {
   background-color: black;
   color: white;
 }
 
+/* 에러 메시지 스타일 */
 .error {
   color: red;
   font-size: 12px;
   text-align: center;
+}
+
+/* 추가: 화면 크기에 따라 로그인 컨테이너의 위치 조정 */
+@media (max-width: 768px) {
+  .login-container {
+    width: 90%; /* 모바일에서 너비를 90%로 설정 */
+  }
 }
 
 

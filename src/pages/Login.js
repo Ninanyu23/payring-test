@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import '../css/login.css';
-import PageNavigationButton from '../components/PageNavigate';  // PageNavigationButton 임포트
+import PageNavigationButton from '../components/PageNavigate';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+
+  // 쿠키에서 토큰을 가져오는 함수
+  const getCookie = (name) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) {
+      return match[2];
+    }
+    return null;
+  };
 
   // 로그인 요청 함수
   const handleLogin = async (e) => {
@@ -17,22 +26,31 @@ const Login = () => {
     }
 
     try {
-      // 로그인 API 호출 (백엔드와 연동)
-      const response = await fetch('http://your-api-endpoint/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // 쿠키 인증 포함
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
+      console.log('로그인 응답 데이터:', data); // 응답 데이터 확인
+
       if (response.ok) {
-        // 로그인 성공
-        console.log('로그인 성공:', data);
-        localStorage.setItem('token', data.token);
-        window.location.href = '/home';
+        // 로그인 성공 시
+        if (data.data && data.data.token) {
+          // 쿠키에 토큰 저장
+          document.cookie = `token=${data.data.token}; path=/; samesite=lax`;
+          console.log('토큰이 쿠키에 저장되었습니다.');
+
+          // 마이페이지로 이동
+          window.location.href = '/mypage';
+        } else {
+          console.error('응답에 토큰이 포함되지 않았습니다.');
+        }
       } else {
         setError(data.message || '로그인에 실패했습니다.');
       }
@@ -44,7 +62,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className='guest'>
+      <div className="guest">
         <img src="/guest.png" alt="Guest Icon" />
       </div>
       <form onSubmit={handleLogin}>
@@ -73,7 +91,9 @@ const Login = () => {
         {error && <p className="error">{error}</p>}
 
         <div className="button-container">
-          <div className='login-btn'><button type="submit">로그인</button></div>
+          <div className="login-btn">
+            <button type="submit">로그인</button>
+          </div>
           <PageNavigationButton label="회원가입" to="/signup" />
         </div>
       </form>
